@@ -1,10 +1,10 @@
 import math
 """
-Calculate Search Related Metrics
+Calculate Rank Related Metrics
 Input: Predictions, Labels
 Output: score
 """
-class SearchMetrics:
+class RankMetrics:
     def __init__(self):
         pass
 
@@ -101,7 +101,23 @@ class SearchMetrics:
             for i in range(len(labels)):
                 total += (2 ** labels[i] - 1) / math.log2(i + 2)  # to avoid dividing by zero
             return total
-        pred_dcg = dcg(predictions, labels)
+        pred_dcg = dcg(labels)
         optimal_labels = sorted(labels, reverse=True)
         max_dcg = dcg(optimal_labels)
         return pred_dcg / max_dcg
+
+    """
+    Area Under the ROC Curve
+    TPR / FPR
+    """
+    def auc(self, predictions, labels):
+        height = 0
+        width = 0
+        area = 0
+        for l in labels:
+            if l == 1:
+                height += 1
+            else:
+                width += 1
+                area += height
+        return area / (width * height)
