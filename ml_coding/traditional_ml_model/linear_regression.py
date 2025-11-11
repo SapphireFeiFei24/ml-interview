@@ -4,6 +4,7 @@ class LinearRegression:
     """
     Y = X*W + B
     Loss = 1/(2n) * sum((y-y_pred)**2) + lambda/(2n)*W^2
+    Gradient: (y_pred - y) * x
     """
     def __init__(self, lr=0.01, n_iters=1000, reg_lambda=0.0):
         self.weights = None
