@@ -1,6 +1,6 @@
 import numpy as np
 
-def SVD:
+class SVD:
     """
     Inuition:
     A = UEV^T
