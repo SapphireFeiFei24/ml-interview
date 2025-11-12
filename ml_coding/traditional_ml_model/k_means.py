@@ -34,7 +34,7 @@ class KMeans:
 
     def _update_centroids(self, X, labels):
         new_centroids = np.zeros_like(self.centroids)
-        for k in range(self.n_clusters)
+        for k in range(self.n_clusters):
             cluster_points = X[labels == k]
             if len(cluster_points) == 0:
                 # handle empty cluster by reinitializing
