@@ -44,15 +44,15 @@ class KMeans:
         return new_centroids
 
     def fit(self, X):
-        self.centoids = self._init_centroids(X)
+        self.centroids = self._init_centroids(X)
 
         for _ in range(self.max_iters):
             labels = self._assign_clusters(X)
             new_centroids = self._update_centroids(X, labels)
-            shift = np.linalg.norm(self.centoids - new_centroids)
+            shift = np.linalg.norm(self.centroids - new_centroids)
             if shift < self.tol:
                 break
-            self.centoids = new_centroids
+            self.centroids = new_centroids
 
         # Compute final inertia
         distances = np.linalg.norm(X[:, np.newaxis] - self.centoids, axis=2)
