@@ -57,6 +57,11 @@ class ClassificationMetrics:
         loss = -np.mean(y_true * np.log(y_pred) + (1-y_true) * np.log(1-y_pred))
         return loss
 
+    def grad_cross_entropy(self, y, y_pred):
+        # TODO: not numerically stable
+        return - (y / y_pred - (1-y) / (1-y_pred))
+
+
     def softmax(self, logits):
         """
         :param logits: raw model outputs of shape (N, C)

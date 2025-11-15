@@ -1,8 +1,44 @@
 import numpy as np
 
 class ActivationFuncs:
-    def __init__(self):
-        pass
+    def __init__(self, func):
+        self.func = func
+
+    def activate(self, x):
+        if self.func == "relu":
+            return self.relu(x)
+
+        if self.func == "sigmoid":
+            return self.sigmoid(x)
+
+        if self.func == "leaky_relu":
+            return self.leaky_relu(x)
+
+        if self.func == "softmax":
+            return self.softmax(x)
+
+        if self.func == "tanh":
+            return self.tanh(x)
+
+        raise ValueError(f"Func:{self.func} Not Found")
+
+    def grad(self, x):
+        if self.func == "relu":
+            return self.grad_relu(x)
+
+        if self.func == "sigmoid":
+            return self.grad_sigmoid(x)
+
+        if self.func == "leaky_relu":
+            return self.grad_leaky_relu(x)
+
+        if self.func == "softmax":
+            return self.grad_softmax(x)
+
+        if self.func == "tanh":
+            return self.grad_tanh(x)
+
+        raise ValueError(f"Func:{self.func} Not Found")
 
     def sigmoid(self, x):
         """
