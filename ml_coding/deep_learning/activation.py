@@ -35,7 +35,7 @@ class ActivationFuncs:
         :return:
         """
         out = np.zeros_like(x)
-        pos_mask = x>= 0
+        pos_mask = x >= 0
         neg_mask = ~pos_mask
 
         # for x >= 0, use exp(-2x)
