@@ -67,7 +67,7 @@ class NeuralNetwork:
         for layer in reversed(self.layers):
             dA = layer.backward(dA, lr)
 
-    def fit(self, X, y, lr=0.01, epochs = 1000):
+    def fit(self, X, y, lr=0.01, epochs=1000):
         for i in range(epochs):
             y_pred = self.forward(X)
             loss = self.loss.cross_entropy(y_pred=y_pred, y=y)
