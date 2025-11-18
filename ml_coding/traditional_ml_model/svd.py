@@ -22,7 +22,7 @@ class SVD:
         -> Rcmd: latent item factors
 
     Some math facts:
-    * Relatoinship to eigen-decomposition
+    * Relationship to eigen-decomposition
     * Rank: number of non-zero singular values
     * Best rank-k approx
     * Condition number
@@ -30,8 +30,8 @@ class SVD:
 
     Algorithms to know
     * Exact SVD(dense, small-medium matrices): numpy.linalg.svd - O(min(mn^2, m^2n)
-    * Truncated/Partial SVD via eigendecomposition of A^TA or scipy.sparse.linalg.svds for sparse large matrices
-    * Power iteration/Lanczos: compute top singular vector iteractively
+    * Truncated/Partial SVD via eigen-decomposition of A^TA or scipy.sparse.linalg.svds for sparse large matrices
+    * Power iteration/Lanczos: compute top singular vector interactively
     * Randomized SVD - fast to practical for very large matrices O(mnlogk + k^2 (m+n))
     """
     def __init__(self):
@@ -48,7 +48,7 @@ class SVD:
 
         # full_matrics=False gives U shape (m,r), Vt shape(r, n) where r = min(m,n)
         # so slicing is simple
-        U, s, Vt = np.linalg.svd(A, full_matrices=False) #economical SVD
+        U, s, Vt = np.linalg.svd(A, full_matrices=False)  # economical SVD
         return U[:, :k], s[:k], Vt[:k, :]
 
     def top1_svd_power(self, A, num_iters=100, tol=1e-6):
@@ -115,8 +115,9 @@ class SVD:
         Ub, s, Vtb = np.linalg.svd(B, full_matrices=False)
         U_k = Ub[:, :k]
         S_k = s[:k]
-        V_k = Y @ Vtb.T[:, :k]  #shape n x k
+        V_k = Y @ Vtb.T[:, :k]  # shape n x k
         return U_k, S_k, V_k.T
+
 
 class PCA:
     """
