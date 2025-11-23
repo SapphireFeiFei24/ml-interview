@@ -51,6 +51,39 @@ class Dense:
         self.b -= lr * db
         return dX
 
+class Dropout:
+    def __init__(self, p=0.5):
+        """
+
+        :param p: probability of drop out
+        """
+        assert 0 <= p < 1, "Dropout probability must be in [0, 1)"
+        self.p = p
+        self.mask = None
+
+    def forward(self, input, training=True):
+        """
+        During the training stage, apply mask and rescale using 1 / (1-p)
+        During inference stage, remove the mask
+        :param input:
+        :param training:
+        :return:
+        """
+        if training:
+
+            self.mask = (np.random.randn(*input.shape) > self.p) / (1 - self.p)
+            return input * self.mask
+        return input
+
+    def backward(self, dA):
+        """
+        Backward pass through dropout layer
+        :param dA: gradient from next layer
+        :return: gradient w.r.t input
+        """
+        # Apply the same mask from forward pass
+        return dA * self.mask
+
 
 class NeuralNetwork:
     def __init__(self, layers):
