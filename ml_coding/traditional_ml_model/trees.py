@@ -7,13 +7,17 @@ class Node:
         self.left = left  # left child node
         self.right = right  # right child node
         self.value = value  # leaf value
-        self.category=category
+        self.category = category
 
     def is_leaf(self):
         return self.value is not None
 
 
-class CART:
+class DecisionTreeClassifier:
+    """ A decision tress classifier based on gini index
+    Supports both category and numerical features
+    Supports early stop based on min_sample_splits, min_impurity decrease
+    """
     def __init__(self, max_depth=None, min_samples_split=2,
                  min_impurity_decrease=1e-7, category_features=None):
         self.max_depth = max_depth
@@ -173,7 +177,165 @@ class CART:
     def predict(self, X):
         return np.array([self._predict_one(x, self.root) for x in X])
 
-if __name__ == "__main__":
+
+class DecisionTreeRegressor:
+    """ A decision tree regressor based on mse
+    Support numerical features only.
+    Early stop based on max_depth, min_samples, mse changes
+    """
+    def __init__(self, max_depth=None, min_samples=2, min_mse_changes=1e-7):
+        self.max_depth = max_depth
+        self.min_samples = min_samples
+        self.min_mse_changes = min_mse_changes
+        self.root = None  # tree
+
+    def _mse(self, labels):
+        """
+        Calculate mse for a leaf node
+        :param labels: (n_samples, )
+        :return: mean squared error
+        """
+        mean = np.mean(labels)
+        return np.mean((labels - mean) ** 2)
+
+    def _mse_gain(self, parent_y, left_y, right_y):
+        """
+        Calculate the mse gain if split on thres compared to no split
+        :param parent_y: (n_samples,)
+        :param left_y: left children
+        :param right_y: right children
+        :return:
+        """
+        if len(left_y) == 0 or len(right_y) == 0:
+            raise ValueError("Children size not valid")
+        origin_mse = self._mse(parent_y)
+        left_mse = self._mse(left_y)
+        right_mse = self._mse(right_y)
+        left_w = len(left_y) / len(parent_y)
+        right_w = len(right_y) / len(parent_y)
+        return origin_mse - (left_w * left_mse + right_w * right_mse)
+
+    def _best_split(self, X, y):
+        """
+        Find the best feature to split on
+        :param X: (n_samples, n_features)
+        :param y: (n_samples,)
+        :return: (feature_idx, threshold, mse_gain)
+        """
+        n_samples, n_features = X.shape
+
+        largest_mse_gain = 0
+        best_feature, best_split = None, None
+        # loop through all features
+        for feature in range(n_features):
+            values = X[:, feature]
+            unique_vals = np.unique(values)
+
+            thresholds = (unique_vals[:-1] + unique_vals[1:]) / 2
+            for thres in thresholds:
+                left_idx = (values <= thres)
+                right_idx = ~left_idx
+                if left_idx.sum() == 0 or right_idx.sum() == 0:
+                    # not a valid split
+                    continue
+
+                left_y, right_y = y[left_idx], y[right_idx]
+                mse_gain = self._mse_gain(y, left_y, right_y)
+                if mse_gain > largest_mse_gain:
+                    largest_mse_gain = mse_gain
+                    best_feature = feature
+                    best_split = thres
+        return (largest_mse_gain, best_feature, best_split)
+
+    def _grow_tree(self, X, y, depth=0):
+        """
+        Grow a tree from node
+        :param X: (n_samples, n_features) leftover data within current node
+        :param y: (n_samples, ) labels
+        :param depth: current depth for this node
+        :return: current tree node
+        """
+        if self.max_depth and depth >= self.max_depth:
+            return Node(value=np.mean(y))
+
+        if len(y) < self.min_samples:
+            return Node(value=np.mean(y))
+
+        gain, feature, thres = self._best_split(X, y)
+        if gain < self.min_mse_changes:
+            return Node(value=np.mean(y))
+
+        left_idx = (X[:, feature] <= thres)
+        right_idx = ~left_idx
+
+        if left_idx.sum() == 0 or right_idx.sum() == 0:
+            return Node(value=np.mean(y))
+
+        left_X, right_X = X[left_idx], X[right_idx]
+        left_y, right_y = y[left_idx], y[right_idx]
+        left_child = self._grow_tree(left_X, left_y, depth+1)
+        right_child = self._grow_tree(right_X, right_y, depth+1)
+        node = Node(feature=feature, threshold=thres, left=left_child, right=right_child)
+        return node
+
+    def fit(self, X, y):
+        """
+        Grow a tree based on the training data
+        :param X: (n_samples, n_features)
+        :param y: (n_samples,)
+        :return:
+        """
+        self.root = self._grow_tree(X, y)
+
+    def _predict_one(self, x):
+        """
+        :param x: (1, n_features)
+        :return: value
+        """
+        node = self.root
+        while not node.is_leaf():
+            feat = node.feature
+            if x[feat] <= node.threshold:
+                node = node.left
+            else:
+                node = node.right
+        return node.value
+
+    def predict(self, X):
+        """
+        Making predictions
+        :param X: (n_samples, n_features)
+        :return: predictions (n_samples,)
+        """
+        predictions = [self._predict_one(x) for x in X]
+        return np.array(predictions)
+
+def test_regression_tree():
+    # Small dataset
+    X = np.array([
+        [1],
+        [2],
+        [3],
+        [4],
+        [5]
+    ])
+    y = np.array([1.1, 1.9, 3.0, 4.1, 4.9])
+
+    # Train the decision tree
+    tree = DecisionTreeRegressor(max_depth=2, min_samples=1)
+    tree.fit(X, y)
+
+    # Predict
+    preds = tree.predict(X)
+
+    print("Predictions:", preds)
+    print("True labels:", y)
+
+    # Simple assertion: predictions are close to original labels
+    assert np.allclose(preds, y, atol=1.0), "Predictions not close to labels!"
+    print("Test passed ✅")
+
+def test_classifier():
     X = np.array([
         [2.5, 'red'],
         [1.0, 'blue'],
@@ -184,14 +346,17 @@ if __name__ == "__main__":
 
     y = np.array([0, 0, 1, 1, 0])
 
-    tree = CART(
+    tree = DecisionTreeClassifier(
         max_depth=3,
         category_features=[1]  # feature #1 is categorical
     )
     tree.fit(X, y)
-
     print(tree.predict([
         [2.4, 'red'],
         [1.5, 'blue'],
         [2.1, 'green']
     ]))
+if __name__ == "__main__":
+    test_regression_tree()
+
+
