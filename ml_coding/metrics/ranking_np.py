@@ -36,11 +36,11 @@ class RankMetricsNumpy:
 
     def auc(self, y_true, y_pred):
         # Sort by predicted score descending
-        order = np.argsort(-y_true)
-        labels = np.array(labels)[order]
-        height = 0 # num of pos seen so far
-        area = 0 # area under curve
-        width = 0 # num of neg seen so far
+        order = np.argsort(-y_pred)
+        labels = np.array(y_true)[order]
+        height = 0  # num of pos seen so far
+        area = 0  # area under curve
+        width = 0  # num of neg seen so far
         for l in labels:
             if l == 1:
                 height += 1
@@ -49,12 +49,14 @@ class RankMetricsNumpy:
                 area += height
         return area / (height * width)
 
-
-    """
-    Ties: when a positive and a negative have equal prediction values, they're not clearly "ranked"
-    AUC = P(scores_pos > score_neg) + 0.5 x P(score_pos == score_neg)
-    """
-    def auc_with_ties(predictions, labels):
+    def auc_with_ties(self, predictions, labels):
+        """
+        Ties: when a positive and a negative have equal prediction values, they're not clearly "ranked"
+        AUC = P(scores_pos > score_neg) + 0.5 x P(score_pos == score_neg)
+        :param predictions:
+        :param labels:
+        :return:
+        """
         # Sort by predictions descending
         order = np.argsort(-predictions)
         preds_sorted = np.array(predictions)[order]

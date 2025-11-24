@@ -9,7 +9,7 @@ Mathematical Formular
     P(x) is consistent across classes:
         only need to find argmax P(c) * prod_over_x(P(x|c))
     To avoid underflow from products:
-        find argmax logP(c) * sum_over_x(log(P(x|c)))
+        find argmax logP(c) + sum_over_x(log(P(x|c)))
 """
 
 class MultinomialNaiveBayes:

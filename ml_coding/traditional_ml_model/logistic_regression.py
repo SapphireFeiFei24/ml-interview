@@ -15,16 +15,16 @@ class LogisticRegression:
         self.b = 0
 
 
-    def __init_weights(self, n_features):
+    def _init_weights(self, n_features):
         self.weights = np.random.normal(loc=0.0, scale=1.0, size=n_features)
 
-    def __sigmoid(self, z):
+    def _sigmoid(self, z):
         # prevent overflow
         return 1 / (1 + np.exp(-np.clip(z, -500, 500)))
 
     def predict_prob(self, X):
         z = X @ self.weights + self.b
-        return self.__sigmoid(z)
+        return self._sigmoid(z)
 
     def predict(self, X, threshold=0.5):
         prob = self.predict_prob(X)
@@ -32,7 +32,7 @@ class LogisticRegression:
 
     def fit(self, X, y):
         n_samples, n_features = X.shape
-        self.__init_weights(n_features)
+        self._init_weights(n_features)
 
         for _ in range(self.n_iter):
             # predict

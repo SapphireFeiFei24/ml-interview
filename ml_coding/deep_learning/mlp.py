@@ -31,11 +31,11 @@ class Dense:
         return A
 
     def backward(self, dA, lr):
-        """
+        """ Y = X @ W + b -> dX = dY @ W.T
         Update the weights and bias
         :param dA: (n_samples, dim_out)
         :param lr:
-        :return: None
+        :return: grad of input dX (n_samples, dim_in)
         """
         # (n_samples, dim_out)
         dZ = dA * self.activation_funcs.grad(self.Z)
@@ -76,7 +76,7 @@ class Dropout:
         return input
 
     def backward(self, dA):
-        """
+        """ Y = X * mask -> dX = dY * mask
         Backward pass through dropout layer
         :param dA: gradient from next layer
         :return: gradient w.r.t input

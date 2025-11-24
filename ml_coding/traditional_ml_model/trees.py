@@ -21,8 +21,8 @@ class DecisionTreeClassifier:
     def __init__(self, max_depth=None, min_samples_split=2,
                  min_impurity_decrease=1e-7, category_features=None):
         self.max_depth = max_depth
-        self.min_samples_split=min_samples_split
-        self.min_impurity_decrease=min_impurity_decrease
+        self.min_samples_split = min_samples_split
+        self.min_impurity_decrease = min_impurity_decrease
         self.categorical_features = set(category_features or [])
         self.root = None
 

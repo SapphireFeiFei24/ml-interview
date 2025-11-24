@@ -24,19 +24,19 @@ class ActivationFuncs:
 
     def grad(self, x):
         if self.func == "relu":
-            return self.grad_relu(x)
+            return self.relu_grad(x)
 
         if self.func == "sigmoid":
-            return self.grad_sigmoid(x)
+            return self.sigmoid_grad(x)
 
         if self.func == "leaky_relu":
-            return self.grad_leaky_relu(x)
+            return self.leaky_relu_grad(x)
 
         if self.func == "softmax":
-            return self.grad_softmax(x)
+            return self.softmax_grad(x)
 
         if self.func == "tanh":
-            return self.grad_tanh(x)
+            return self.tanh_grad(x)
 
         raise ValueError(f"Func:{self.func} Not Found")
 

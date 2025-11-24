@@ -8,15 +8,15 @@ class LinearRegression:
     """
     def __init__(self, lr=0.01, n_iters=1000, reg_lambda=0.0):
         self.weights = None
-        self.bias = 0
+        self.bias = 0  # scalar, not vector
         self.lr = lr
         self.reg_lambda = reg_lambda
         self.n_iters = n_iters
 
-    def __init_weights(self, n_features):
+    def _init_weights(self, n_features):
         """
         Random init weights based on feature dim.
-        Avoid init all zeros. That'll make the update of all weights to the same direction
+        For linear regression, not like DNN, the weights can be initialized with all zeros.
         :param n_features:
         :return:
         """
@@ -32,15 +32,17 @@ class LinearRegression:
         :return:
         """
         n_samples, n_features = X.shape
-        self.__init_weights(n_features)
+        self._init_weights(n_features)
 
         for _ in range(self.n_iters):
-            # Prediction
+            # Prediction: Y = X @ W + b
             y_pred = self.predict(X)
 
             # Calc Gradients
-            dy = (y_pred - y)
+            dy = (y_pred - y)  # from mse_loss
+            # dw = dy @ X + d_regularize
             dw = (1/n_samples) * (X.T @ dy) + (self.reg_lambda/n_samples) * self.weights
+            # db = dy
             db = (1/n_samples) * np.sum(dy)
 
             # Update

@@ -7,11 +7,19 @@ class SVM:
         self.weight = None
         self.bias = 0
 
-    def fit(self, X, y):
-        n_samples, n_features = X.shape
-        y_ = np.where(y <= 0, -1, 1) # labels are -1, 1
-        self.w = np.random.normal(loc=0.0, scale=1.0, size=n_features)
+    def _init_weights(self, n_features):
+        self.w = np.zeros(n_features)  # init with zeros for better deterministic
         self.b = 0
+    def fit(self, X, y):
+        """
+        Update based on Hinge Loss(Only misclassified samples have) + Maximized Margin(l2 Regularization)
+        :param X:
+        :param y:
+        :return:
+        """
+        n_samples, n_features = X.shape
+        y_ = np.where(y <= 0, -1, 1)  # labels are -1, 1
+        self._init_weights(n_features)
 
         for _ in range(self.n_iters):
             # compute margins
@@ -21,8 +29,9 @@ class SVM:
             misclassified = margins < 1
 
             # gradients: only misclassified will affect gradients
-            dw = self.w - self.lambda_param * (y_[misclassified] @ X[misclassified])
-            db = -self.lambda_param * self.sum(y_[misclassified])
+            dy = -self.lambda_param / n_samples * (y_[misclassified] @ X[misclassified])
+            dw = self.w + dy
+            db = -self.lambda_param / n_samples * np.sum(y_[misclassified])
 
             # update
             self.w -= self.lr * dw
