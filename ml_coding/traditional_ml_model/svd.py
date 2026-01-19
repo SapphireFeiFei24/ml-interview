@@ -39,7 +39,7 @@ class SVD:
 
     def truncated_svd(A, k):
         """
-        O(min(mn^2, m^n)) Good for small to medium matrices
+        O(min(mn^2, m^2n)) Good for small to medium matrices
         Return U_k, S_k, Vt_k for top-k SVD using numpy
         :param A: (M, N)
         :param k:  <= min(M, N)

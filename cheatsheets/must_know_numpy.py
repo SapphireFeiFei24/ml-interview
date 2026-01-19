@@ -8,15 +8,17 @@ def array_creation_shapes():
     print("np.ones", np.ones((2, 3)))
     print("np.flatten", np.ones((2, 3)).flatten())
     print("np.random.randn", np.random.randn(2,3))
+    print("np.random.normal", np.random.normal((2,3)))
     print("np.random.randint", np.random.randint(high=4, low=1, size=(3,2)))
     print("[:, new_axis]", np.ones((2, 4))[:, np.newaxis].shape)
+    print("reshape", np.ones((2, 4, 3)).reshape(-1, 1).shape)
     print("[new_axis, :]", np.ones((2, 4))[np.newaxis, :].shape)
 
 
 def broad_casting():
     print(f"[array_with_scala]array:{np.ones(3)} * scalar:{5}", np.ones(3) * 5)
 
-    origin = np.random.randn(2,3)
+    origin = np.random.randn(2, 3)
     mean = np.mean(origin, axis=0)
     res = origin-mean
     print(f"[array with array]array({origin.shape}) - array({mean.shape}) = result({res.shape})", res)
