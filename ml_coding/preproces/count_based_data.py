@@ -24,3 +24,14 @@ def log_cap(x, cap=1000):
     :return:
     """
     return numpy.log1p(min(safe_integer(x), cap))  # log(1 + x)
+
+def ratio(x, y, epsilon=1.0):
+    """
+    Useful to normalize popularity, i.e like_cnt/follow_cnt
+    Very unstable at low denominators
+    :param x:
+    :param y:
+    :param epsilon:
+    :return:
+    """
+    return x / (y + epsilon)
