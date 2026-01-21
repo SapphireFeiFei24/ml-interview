@@ -7,6 +7,7 @@ Checklist before start
 5. Correlations: Feature -> Label, any leakage
 """
 import numpy as np
+import numpy.random
 import pandas
 
 TRAINING_DATA_PATH = "../../data_sample/train.csv"
@@ -112,6 +113,17 @@ from collections import Counter
 ## 3.4 Time Consistency
 ### "Filter out the invalid rows, create time can't be later than ranking time"
 
+# 4. Training & Testing Split
+def split_training_testing(input_data):
+    """
+    Split based on 80-20
+    :param input_data:
+    :return: training, testing
+    """
+    x = numpy.array(input_data)
+    numpy.random.shuffle(x)
+    cnt = len(x)
+    return x[:int(cnt*0.8)], x[int(cnt*0.8):]
 
 if __name__=="__main__":
     load_data_to_dataframe(TRAINING_DATA_PATH)
