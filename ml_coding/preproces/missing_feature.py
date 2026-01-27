@@ -26,7 +26,7 @@ def sanitize_count_df(data: pd.DataFrame, key: str):
 # 2.Categorical Features(langugate, client_type)
 ## Often high-candinality, missingess common, longtail of rare values
 ## Fill missing with UNK, bucket rare values, keep common ones
-import categorical_data as cate_data
+import categorical_feature as cate_data
 
 
 def sanitize_cate_count(data: list, key: str):

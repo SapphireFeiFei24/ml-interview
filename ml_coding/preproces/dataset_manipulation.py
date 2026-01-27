@@ -15,12 +15,17 @@ TRAINING_DATA_PATH = "../../data_sample/train.csv"
 # 1. Reading from a csv file
 import csv
 import pandas as pd
-def load_data_to_dict(path: str):
+def load_data_to_dict(path: str) -> list:
+    """
+
+    :param path:
+    :return: List of dictionary
+    """
     data = []
     with open(path) as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            print(type(row),row)
+            print(type(row), row)
             data.append(row)
     return data
 
@@ -68,6 +73,9 @@ def downsample(data: list, ratio=1.0):
     index = np.random.choice(np_array.shape[0], count, replace=False)
     return np_array[index]
 
+def downsample(data: np.array, ratio=0.8):
+    msk = np.random.rand(len(data)) < ratio
+    return data[msk]
 
 def downsample_df(data: pd.DataFrame, ratio=1.0):
     return data.sample(frac=ratio, replace=False)
@@ -96,11 +104,12 @@ def missing_rate(data: pd.DataFrame, key: str):
 
 ## 3.2 Distribution of count features
 ### Identify heavy tail feautres by checking p99/p90 ratio(>=10) etc
-def percentile_distribution(data: list, key: str):
+def percentile_distribution(data: list, key: str, percentiles=[0.9, 0.99]):
     values = sorted(row[key] for row in data if row[key] is not None)
-    p90 = values[int(len(values) * 0.9)]
-    p99 = values[int(len(values) * 0.99)]
-    return p90, p99
+    res = []
+    for p in percentiles:
+        res.append(values[int(len(values) * p)])
+    return res
 
 def percentile_distribution_df(data: pd.DataFrame, key: str):
     data[key].describe(percentiles=[0.9, 0.99])
