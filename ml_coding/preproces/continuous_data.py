@@ -13,8 +13,7 @@ Standardization: use Z-score when
 import math
 import numpy as np
 import pandas as pd
-def hours_between(event_time, created_time):
-    return (event_time - created_time).total_seconds / 3600
+
 
 def log_trasnform(price, epsilon):
     """

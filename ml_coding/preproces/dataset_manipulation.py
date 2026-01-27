@@ -114,16 +114,26 @@ from collections import Counter
 ### "Filter out the invalid rows, create time can't be later than ranking time"
 
 # 4. Training & Testing Split
-def split_training_testing(input_data):
+def split_training_testing(input_data, sample_rate=0.8):
     """
-    Split based on 80-20
+    Shuffle and Split based on 80-20
     :param input_data:
     :return: training, testing
     """
     x = numpy.array(input_data)
     numpy.random.shuffle(x)
     cnt = len(x)
-    return x[:int(cnt*0.8)], x[int(cnt*0.8):]
+    return x[:int(cnt*sample_rate)], x[int(cnt*sample_rate):]
+
+def split_training_testing(input_data, sample_rate=0.8):
+    """
+    Sample using mask
+    :param input_data:
+    :param sample_rate:
+    :return: training, testing
+    """
+    msk = np.random.rand(len(input_data)) < sample_rate
+    return input_data[msk], input_data[~msk]
 
 if __name__=="__main__":
     load_data_to_dataframe(TRAINING_DATA_PATH)
