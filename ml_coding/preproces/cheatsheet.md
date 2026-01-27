@@ -83,7 +83,8 @@
 `Positive rate = #positive/#total`
 * 30%-50%: balanced
 * 5%-30%: mild skew, ACC becomes meaningless
-  * Stratified split, PR-AUC
+  * Stratified split: making sure each split has appx the same label distri as the full dataset
+  * PR-AUC: Precision over Recall auc, focus on true positive class performance
 * 1% - 5%: skewed
   * Reweighting, calibration
 * 0.1%-1%: highly skewed
