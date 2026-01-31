@@ -5,7 +5,7 @@ Calculate Classification Related Metrics
 """
 
 class ClassificationMetrics:
-    def  __init__(self):
+    def __init__(self):
         pass
 
     """
