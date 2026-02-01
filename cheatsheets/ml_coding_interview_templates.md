@@ -1,4 +1,4 @@
-# ML Coding Interview
+# ML Coding Interview -- Engineering Focused
 
 ## 1. Setup and Clarifying Questions (1-5min)
 > Ask clarifications then restate the assumptions.
@@ -14,8 +14,6 @@
     1. Fits in memory: small-batch
 6. Any expected numeric stability or weighting(sample weights)?
    1. Weight Sampling: loss or metrics is calculated based on the weights
-
-
 
 ## 2. Problem Decomposition & Design (5-10min)
 > Break problem into components
